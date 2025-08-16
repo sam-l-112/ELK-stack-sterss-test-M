@@ -1,0 +1,56 @@
+--- 
+- name: ELK stack 
+  hosts: all[0]
+  become: true
+  gather_facts: false
+  remote_user: ubuntu
+  vars:
+    ansible_user: ubuntu
+  tasks:
+# update pod status
+
+  - name: Apply PVC configuration
+    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/pvc.yml
+
+  - name: Get PV status
+    command: kubectl get pv
+
+  - name: Apply Elasticsearch configuration
+    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/elaticsearch.yml
+
+  - name: Get PVC status
+    command: kubectl get pvc
+
+  - name: Get PV status
+    command: kubectl get pv
+
+  - name: Get pod status
+    command: kubectl get pods -A
+
+  - name: Get nodes status
+    command: kubectl get nodes -A
+
+  - name: Get all pods in all namespaces
+    command: kubectl get pod -A
+
+  - name: Get kibana status
+    command: |
+      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/kibana.yml
+
+  - name: Get all pods in all namespaces
+    command: |
+      kubectl get pod -A 
+
+  - name: Get logstash status
+    command: |
+      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/logstash.yml
+
+  - name: Show all pods in all namespaces
+    command: kubectl get pod -A
+    register: pod_result
+
+  - name: Print pod info
+    debug:
+      var: pod_result.stdout
+
+# update pod status

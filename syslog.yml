@@ -1,0 +1,9 @@
+- name: Setup mgmt
+  hosts: all
+  gather_facts: no
+  become: yes
+  become_user: root
+  tasks:
+- import_playbook: /home/ubuntu/ELK-stack-sterss-test-L/ansible/playbooks/install_k3s.yml
+- import_playbook: /home/ubuntu/ELK-stack-sterss-test-L/ansible/playbooks/pvcpath.yml
+- import_playbook: /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/vars/main.yml
