@@ -10,13 +10,13 @@
 # update pod status
 
   - name: Apply PVC configuration
-    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/pvc.yml
+    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-M/ELK-roles/pvc.yml
 
   - name: Get PV status
     command: kubectl get pv
 
   - name: Apply Elasticsearch configuration
-    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/elaticsearch.yml
+    command: kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-M/ELK-roles/elasticsearch.yml
 
   - name: Get PVC status
     command: kubectl get pvc
@@ -35,7 +35,7 @@
 
   - name: Get kibana status
     command: |
-      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/kibana.yml
+      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-M/ELK-roles/kibana.yml
 
   - name: Get all pods in all namespaces
     command: |
