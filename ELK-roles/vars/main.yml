@@ -43,7 +43,7 @@
 
   - name: Get logstash status
     command: |
-      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-L/ELK-roles/logstash.yml
+      kubectl apply -f /home/ubuntu/ELK-stack-sterss-test-M/ELK-roles/logstash.yml
 
   - name: Show all pods in all namespaces
     command: kubectl get pod -A
