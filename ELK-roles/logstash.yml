@@ -62,34 +62,17 @@ spec:
         prometheus.io/scrape: "true" # Enable Prometheus scraping
         prometheus.io/port: "9600" # Logstash monitoring port
     spec:
-    
       containers:
         - name: logstash
           resources:
             requests:
-              cpu: "500m"
-              memory: "3Gi"
+              cpu: "1" # 2 CPU cores for stress testing
+              memory: "6Gi" # 4GB memory
             limits:
-              cpu: "2000m"
-              memory: "4Gi"
-          env:
-            - name: LS_JAVA_OPTS
-              value: >
-                -Xms2g 
-                -Xmx2g
-                -XX:+HeapDumpOnOutOfMemoryError
-                -Djava.io.tmpdir=/tmp/logstash
-                -XX:ErrorFile=logs/hs_err_pid%p.log
-                -Djruby.compile.invokedynamic=true
-                -Djruby.jit.threshold=0
-                -Djruby.regexp.interruptible=true
-                -Dlog4j2.isThreadContextMapInheritable=true
-                -Dls.cgroup.cpuacct.path.override=/
-                -Dls.cgroup.cpu.path.override=/
-                -Djava.awt.headless=true
-                -Dfile.encoding=UTF-8
-                -Djava.security.egd=file:/dev/urandom
+              cpu: "2" # Allow up to 4 CPU cores
+              memory: "8Gi" # Allow up to 8GB memory
 
+          env:
             - name: JAVA_OPTS
               value: "-Xms4g -Xmx6g" # JVM heap settings for high throughput
             - name: QS_ES_HOSTS
@@ -111,5 +94,3 @@ spec:
         - name: elasticsearch-certs
           secret:
             secretName: quickstart-es-http-certs-public
-
-  
