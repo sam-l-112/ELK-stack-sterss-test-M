@@ -71,7 +71,6 @@ spec:
             limits:
               cpu: "2" # Allow up to 4 CPU cores
               memory: "8Gi" # Allow up to 8GB memory
-
           env:
             - name: JAVA_OPTS
               value: "-Xms4g -Xmx6g" # JVM heap settings for high throughput

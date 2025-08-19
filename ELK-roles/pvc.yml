@@ -8,8 +8,8 @@ spec:
     storage: 10Gi
   accessModes:
   - ReadWriteOnce
-  # storageClassName: local-path
   storageClassName: standard
+  storageClassName: ""
   hostPath:
     path: /home/ubuntu/pv-master
   persistentVolumeReclaimPolicy: Retain
@@ -21,8 +21,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - k3s-master
-          # change here   ✅正確的 master node hostname
+          - k3s-master # change here   ✅正確的 master node hostname
   claimRef:
     name: elasticsearch-data-quickstart-es-master-node-0
     namespace: default
@@ -37,8 +36,8 @@ spec:
     storage: 10Gi
   accessModes:
   - ReadWriteOnce
-  # storageClassName: local-path
   storageClassName: standard
+  storageClassName: ""
   hostPath:
     path: /home/ubuntu/pv-master
   persistentVolumeReclaimPolicy: Retain
@@ -66,8 +65,8 @@ spec:
     storage: 10Gi
   accessModes:
   - ReadWriteOnce
-  # storageClassName: local-path
   storageClassName: standard
+  storageClassName: ""
   hostPath:
     path: /home/ubuntu/pv-master
   persistentVolumeReclaimPolicy: Retain
@@ -79,11 +78,15 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - vm1
-          # change here   ✅正確的 master node hostname
+          - vm1 # change here   ✅正確的 master node hostname
   claimRef:
     name: elasticsearch-data-quickstart-es-master-node-2
     namespace: default
+
+#=====================================================
+#  PVs for Worker node
+#  PersistentVolume for Elasticsearch Data Node
+#=====================================================
 
 ---
 apiVersion: v1
@@ -94,9 +97,9 @@ spec:
   capacity:
     storage: 1000Gi
   accessModes:
-  - ReadWriteOnce
-  # storageClassName: local-path
+  - ReadWriteOnce 
   storageClassName: standard
+  storageClassName: ""
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
   local:
@@ -108,9 +111,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - k3s-master
-          # change here   ✅正確的 data node hostname
-
+          - k3s-master # change here   ✅正確的 data node hostname
 
 ---
 apiVersion: v1
@@ -122,10 +123,11 @@ spec:
     storage: 1000Gi
   accessModes:
   - ReadWriteOnce
-  # storageClassName: local-path
   storageClassName: standard
+  storageClassName: ""
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   local:
     path: /home/ubuntu/pv-data
   nodeAffinity:
@@ -135,9 +137,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - vm0
-          # change here   ✅正確的 data node hostname
-
+          - vm0 # change here   ✅正確的 data node hostname
 
 ---
 apiVersion: v1
@@ -149,8 +149,8 @@ spec:
     storage: 1000Gi
   accessModes:
   - ReadWriteOnce
-  # storageClassName: local-path
   storageClassName: standard
+  storageClassName: ""
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
   local:
@@ -162,5 +162,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - vm1
-          # change here   ✅正確的 data node hostname
+          - vm1 # change here   ✅正確的 data node hostname

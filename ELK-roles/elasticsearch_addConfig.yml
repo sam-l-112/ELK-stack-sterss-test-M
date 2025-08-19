@@ -12,21 +12,19 @@ spec:
       node.store.allow_mmap: false
       # 記憶體鎖定暫時關閉
       bootstrap.memory_lock: false
-      
       # 資源分配與分散策略
-      # node.attr.rack_id 由 Chart 自動注入，通常無需手動設定
       node.attr.rack_id: ${NODE_RACK_ID}
       cluster.routing.allocation.awareness.attributes: rack_id
-
       xpack.ml.enabled: false
-      
-      #xpack.monitoring.enabled: true
-      #xpack.monitoring.collection.enabled: true
-      #xpack.monitoring.history.duration: 14d
-      
       xpack.security.enabled: true  
       xpack.license.self_generated.type: basic
       transport.compress: false
+
+      indices.memory.index_buffer_size: 400mb 
+
+      #index只能在index template中設定
+      #index.translog.interval: 30s 
+      #index.translog.flush_threshold_size: 128mb
 
     podTemplate:
       spec:
@@ -73,21 +71,19 @@ spec:
       node.store.allow_mmap: false
       # 記憶體鎖定暫時關閉
       bootstrap.memory_lock: false
-      
       # 資源分配與分散策略
-      # node.attr.rack_id 由 Chart 自動注入，通常無需手動設定
       node.attr.rack_id: ${NODE_RACK_ID}
       cluster.routing.allocation.awareness.attributes: rack_id
-
       xpack.ml.enabled: true
-      
-      #xpack.monitoring.enabled: true
-      #xpack.monitoring.collection.enabled: true
-      #xpack.monitoring.history.duration: 14d
-      
       xpack.security.enabled: true  
       xpack.license.self_generated.type: basic
       transport.compress: false
+
+      indices.memory.index_buffer_size: 400mb 
+
+      #index只能在index template中設定
+      #index.translog.interval: 30s 
+      #index.translog.flush_threshold_size: 128mb
 
     podTemplate:
       spec:
@@ -130,6 +126,3 @@ spec:
           requests:
             storage: 1000Gi
         storageClassName: ""   #與下方 PV 一致（空字串）
-
-
-
