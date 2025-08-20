@@ -34,10 +34,17 @@ spec:
       config.string: |
         input {
           generator {
+            id => "gen-1"
             message => "Hello world!"
             count => 0
             threads => 1000
           }
+          #          generator {
+          #            id => "gen-2"
+          #            message => "Hello world!"
+          #            count => 0
+          #            threads => 10000
+          #         }
           beats {
             port => 5044
             ecs_compatibility => "disabled"  # 添加相容性設置
@@ -49,11 +56,13 @@ spec:
             index => "logstash-%{+YYYY.MM.dd}"
             user => "${QS_ES_USER}"
             password => "${QS_ES_PASSWORD}"
-            cacert => "/usr/share/logstash/config/certs/ca.crt"
+            cacert => "${QS_ES_SSL_CERTIFICATE_AUTHORITY}"
             ecs_compatibility => "disabled"
+            retry_on_conflict => 3
+            http_compression => true
           }
         }
-        
+
   podTemplate:
     metadata:
       labels:
@@ -72,24 +81,24 @@ spec:
               cpu: "2" # Allow up to 4 CPU cores
               memory: "6Gi" # Allow up to 8GB memory
           env:
-            - name: JAVA_OPTS
+            - name: LS_JAVA_OPTS
               value: "-Xms2g -Xmx4g" # JVM heap settings for high throughput
-      #       - name: QS_ES_HOSTS
-      #         value: "https://quickstart-es-http.default.svc:9200"
-      #       - name: QS_ES_USER
-      #         value: "default-quickstart-default-quickstart-logstash-user"
-      #       - name: QS_ES_PASSWORD
-      #         valueFrom:
-      #           secretKeyRef:
-      #             name: quickstart-default-quickstart-logstash-user
-      #             key: default-quickstart-default-quickstart-logstash-user
-      #       - name: QS_ES_SSL_CERTIFICATE_AUTHORITY
-      #         value: "/usr/share/logstash/config/certs/ca.crt"
-      #     volumeMounts:
-      #       - name: elasticsearch-certs
-      #         mountPath: "/usr/share/logstash/config/certs"
-      #         readOnly: true
-      # volumes:
-      #   - name: elasticsearch-certs
-      #     secret:
-      #       secretName: quickstart-es-http-certs-public
+#            - name: QS_ES_HOSTS
+#              value: "https://quickstart-es-http.default.svc:9200"
+#            - name: QS_ES_USER
+#              value: "default-quickstart-default-quickstart-logstash-user"
+#            - name: QS_ES_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: quickstart-default-quickstart-logstash-user
+#                  key: default-quickstart-default-quickstart-logstash-user
+#            - name: QS_ES_SSL_CERTIFICATE_AUTHORITY
+#              value: "/usr/share/logstash/config/certs/ca.crt"
+#          volumeMounts:
+#            - name: elasticsearch-certs
+#              mountPath: "/usr/share/logstash/config/certs"
+#              readOnly: true
+#      volumes:
+#        - name: elasticsearch-certs
+#          secret:
+#            secretName: quickstart-es-http-certs-public

@@ -155,47 +155,47 @@
       loop: "{{ groups['all'][1:] }}"
 
 # 1. 從 server 拉 kubeconfig 到本機
-- name: Fetch kubeconfig from k3s server
-  hosts: all[0]
-  become: true
-  tasks:
-    - name: Fetch k3s.yaml to controller
-      fetch:
-        src: /etc/rancher/k3s/k3s.yaml
-        dest: /tmp/k3s.yaml
-        flat: yes
+# - name: Fetch kubeconfig from k3s server
+#   hosts: all[0]
+#   become: true
+#   tasks:
+#     - name: Fetch k3s.yaml to controller
+#       fetch:
+#         src: /etc/rancher/k3s/k3s.yaml
+#         dest: /tmp/k3s.yaml
+#         flat: yes
 
 # 2. 分發 kubeconfig 到所有 agent
-- name: Distribute kubeconfig to all nodes
-  hosts: all[1:]
-  become: true
-  vars:
-    k3s_server: "{{ groups['all'][0] }}"
-  tasks:
-    - name: Ensure .k3s directory exists on agent
-      file:
-        path: /home/ubuntu/.k3s
-        state: directory
-        owner: ubuntu
-        group: ubuntu
-        mode: '0755'
+# - name: Distribute kubeconfig to all nodes
+#   hosts: all[1:]
+#   become: true
+#   vars:
+#     k3s_server: "{{ groups['all'][0] }}"
+#   tasks:
+#     - name: Ensure .k3s directory exists on agent
+#       file:
+#         path: /home/ubuntu/.k3s
+#         state: directory
+#         owner: ubuntu
+#         group: ubuntu
+#         mode: '0755'
 
-    - name: Copy kubeconfig to agent node
-      copy:
-        src: /tmp/k3s.yaml
-        dest: /home/ubuntu/.k3s/k3s.yaml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
+#     - name: Copy kubeconfig to agent node
+#       copy:
+#         src: /tmp/k3s.yaml
+#         dest: /home/ubuntu/.k3s/k3s.yaml
+#         owner: ubuntu
+#         group: ubuntu
+#         mode: '0644'
 
-    - name: Replace server IP in kubeconfig on agent
-      replace:
-        path: /home/ubuntu/.k3s/k3s.yaml
-        regexp: 'server: https://127.0.0.1:6443'
-        replace: "server: https://{{ groups['all'][0] }}:6443"
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
+#     - name: Replace server IP in kubeconfig on agent
+#       replace:
+#         path: /home/ubuntu/.k3s/k3s.yaml
+#         regexp: 'server: https://127.0.0.1:6443'
+#         replace: "server: https://{{ groups['all'][0] }}:6443"
+#         owner: ubuntu
+#         group: ubuntu
+#         mode: '0644'
 
 - name: Install Elastic、Operator、CRDs、Flannel
   hosts: all[0]
@@ -214,4 +214,8 @@
         wget https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
       # kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/k8s-manifests/kube-flannel.yaml
 
-
+    - name: Change flannel pod CIDR
+      ansible.builtin.replace:
+        path: ~/kube-flannel.yml
+        regexp: '"Network": "10\.244\.0\.0/16"'
+        replace: '"Network": "10.42.0.0/16"'
