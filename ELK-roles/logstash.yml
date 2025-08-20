@@ -23,10 +23,10 @@ spec:
   config:
     log.level: info
     queue.type: memory # Enable persistent queue to handle backpressure
-    queue.max_bytes: 1gb # Increase queue size for high throughput
-    pipeline.batch.size: 256 # Default batch size for Elasticsearch output
-    pipeline.batch.delay: 20 # Delay in ms for batching
-    pipeline.workers: 4
+    queue.max_bytes: 4gb # Increase queue size for high throughput
+    pipeline.batch.size: 2048 # Default batch size for Elasticsearch output
+    pipeline.batch.delay: 1 # Delay in ms for batching
+    pipeline.workers: 8
 
   pipelines:
     - pipeline.id: main
@@ -67,13 +67,13 @@ spec:
           resources:
             requests:
               cpu: "1" # 2 CPU cores for stress testing
-              memory: "6Gi" # 4GB memory
+              memory: "3Gi" # 4GB memory
             limits:
               cpu: "2" # Allow up to 4 CPU cores
-              memory: "8Gi" # Allow up to 8GB memory
+              memory: "6Gi" # Allow up to 8GB memory
           env:
             - name: JAVA_OPTS
-              value: "-Xms4g -Xmx6g" # JVM heap settings for high throughput
+              value: "-Xms2g -Xmx4g" # JVM heap settings for high throughput
             - name: QS_ES_HOSTS
               value: "https://quickstart-es-http.default.svc:9200"
             - name: QS_ES_USER

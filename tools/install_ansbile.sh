@@ -2,7 +2,7 @@
 set -e
 
 # Update package list
-sudo apt update
+sudo apt update -y
 # sudo apt update && sudo apt upgrade -y
 
 # Install additional tools

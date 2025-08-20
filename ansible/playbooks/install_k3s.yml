@@ -201,8 +201,6 @@
   hosts: all[0]
   become: true
   gather_facts: false
-  vars:
-    ansible_user: ubuntu
   tasks:
     - name: Install Elastic CRDs  Operator version 3.1.0
       shell: |
@@ -211,11 +209,29 @@
 
     - name: Install Flannel
       shell: |
-        wget https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
-      # kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/k8s-manifests/kube-flannel.yaml
+        wget -O /root/kube-flannel.yml https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+      args:
+        creates: /root/kube-flannel.yml
 
-    - name: Change flannel pod CIDR
+  
+    - name: Change flannel pod CIDR to 10.42.0.0/16
       ansible.builtin.replace:
-        path: ~/kube-flannel.yml
+        path: /root/kube-flannel.yml
         regexp: '"Network": "10\.244\.0\.0/16"'
         replace: '"Network": "10.42.0.0/16"'
+
+    - name: Apply flannel manifest
+      shell: |
+        kubectl apply -f  /root/kube-flannel.yml
+
+
+    #   wget https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+      # args:
+      #    creates: "{{ ansible_env.HOME }}/kube-flannel.yml"  # 避免重複下載
+      # dest: /root/kube-flannel.yml
+      # mode: '0600'
+
+      # kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/k8s-manifests/kube-flannel.yaml
+    # - name: Set flannel manifest path
+    #   set_fact:
+    #     flannel_manifest: "{{ ansible_env.HOME }}/kube-flannel.yml"
