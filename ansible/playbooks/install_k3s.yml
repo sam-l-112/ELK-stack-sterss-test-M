@@ -41,7 +41,7 @@
     - name: 設定 /etc/rancher/k3s/k3s.yaml 權限
       file:
         path: /etc/rancher/k3s/k3s.yaml
-        mode: "0644"
+        mode: "0755"
       become: true
 
     - name: 讀取 node-token
@@ -58,7 +58,7 @@
         remote_src: yes
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: "0644"
+        mode: "0755"
 
     - name: Set KUBECONFIG environment variable in .bashrc
       lineinfile:
