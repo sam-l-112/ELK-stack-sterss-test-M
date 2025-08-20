@@ -212,7 +212,6 @@
         wget -O /root/kube-flannel.yml https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
       args:
         creates: /root/kube-flannel.yml
-
   
     - name: Change flannel pod CIDR to 10.42.0.0/16
       ansible.builtin.replace:
